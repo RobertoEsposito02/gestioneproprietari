@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 import it.prova.gestioneproprietari.dao.EntityManagerUtil;
 import it.prova.gestioneproprietari.model.Automobile;
+import it.prova.gestioneproprietari.model.Proprietario;
 import it.prova.gestioneproprietari.service.MyServiceFactory;
 import it.prova.gestioneproprietari.service.automobile.AutomobileService;
 import it.prova.gestioneproprietari.service.proprietario.ProprietarioService;
@@ -23,6 +24,13 @@ public class TestProprietarioAutomobile {
 			
 			testRimuoviAutomobile(automobileService);
 			System.out.println("in tabella ci sono: " + automobileService.listAllAutomobili().size() + " elementi");
+			
+			testInserisciUnProprietario(proprietarioService);
+			/* in questo modo controllo anche il funzionamento del metodo listAllProprietari */
+			System.out.println("in tabella ci sono: " + proprietarioService.listAllProprietari().size() + " elementi");
+			
+			testRimuoviProprietario(proprietarioService);
+			System.out.println("in tabella ci sono: " + proprietarioService.listAllProprietari().size() + " elementi");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,5 +85,44 @@ public class TestProprietarioAutomobile {
 		System.out.println(".......testRimuoviAutomobile fine: PASSED.............");
 	}
 	
+	private static void testInserisciUnProprietario(ProprietarioService proprietarioService) throws Exception{
+		System.out.println(".......testInserisciUnProprietario inizio.............");
+		
+		Proprietario nuovoProprietario = new Proprietario("Marco","Rossi","codiceFiscaleMarcoRossi", new SimpleDateFormat("yyyy/MM/dd").parse("1980/01/01"));
+		if(nuovoProprietario.getId() != null)
+			throw new RuntimeException("testInserisciUnProprietario: FALLITO record gia presente");
+		
+		proprietarioService.inserisciNuovo(nuovoProprietario);
+		if(nuovoProprietario.getId() == null)
+			throw new RuntimeException("testInserisciUnProprietario: FALLITO inserimento non riuscito");
+		
+		System.out.println(".......testInserisciUnProprietario fine: PASSED.............");
+	}
 	
+	/* nel testRimuoviProprietario viene provato anche il funzionamento del metodo caricaSingolaProprietario, ho pensato non ci fosse bisogno di fare un test a parte */
+	private static void testRimuoviProprietario(ProprietarioService proprietarioService) throws Exception{
+		System.out.println(".......testRimuoviProprietario inizio.............");
+		
+		if(proprietarioService.listAllProprietari().isEmpty())
+			throw new RuntimeException("testRimuoviProprietario: FALLITO non c'e nulla da eliminare");
+		
+		Proprietario nuovoProprietario = new Proprietario("Luigi","Bianchi","codiceFiscaleLuigiBianchi", new SimpleDateFormat("yyyy/MM/dd").parse("1990/04/12"));
+		if(nuovoProprietario.getId() != null)
+			throw new RuntimeException("testRimuoviProprietario: FALLITO record gia presente");
+		
+		proprietarioService.inserisciNuovo(nuovoProprietario);
+		if(nuovoProprietario.getId() == null)
+			throw new RuntimeException("testRimuoviProprietario: FALLITO inserimento non riuscito");
+		
+		if(!nuovoProprietario.getAutomobili().isEmpty())
+			throw new RuntimeException("testRimuoviProprietario: FALLITO ques'elemento ha dei figli");
+		
+		Long idDaEliminare = nuovoProprietario.getId();
+		proprietarioService.rimuovi(idDaEliminare);
+		if(proprietarioService.caricaSingoloProprietario(idDaEliminare) != null)
+			throw new RuntimeException("testRimuoviProprietario: FALLITO rimozione non avvenuta");
+		
+		
+		System.out.println(".......testRimuoviProprietario fine: PASSED.............");
+	}
 }

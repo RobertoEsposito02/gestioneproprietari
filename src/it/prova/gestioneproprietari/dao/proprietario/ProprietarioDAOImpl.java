@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import it.prova.gestioneproprietari.model.Automobile;
 import it.prova.gestioneproprietari.model.Proprietario;
 
 public class ProprietarioDAOImpl implements ProprietarioDAO {
@@ -21,31 +22,37 @@ public class ProprietarioDAOImpl implements ProprietarioDAO {
 
 	@Override
 	public List<Proprietario> list() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.createQuery("from Proprietario", Proprietario.class).getResultList();
 	}
 
 	@Override
 	public Proprietario get(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.find(Proprietario.class, id);
 	}
 
 	@Override
-	public void update(Proprietario o) throws Exception {
-		// TODO Auto-generated method stub
+	public void update(Proprietario proprietarioInstance) throws Exception {
+		if(proprietarioInstance == null)
+			throw new Exception("input non valido");
 		
+		proprietarioInstance = entityManager.merge(proprietarioInstance);
 	}
 
 	@Override
-	public void insert(Proprietario o) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void insert(Proprietario proprietarioInstance) throws Exception {
+		if (proprietarioInstance == null) {
+			throw new Exception("Problema valore in input");
+		}
+
+		entityManager.persist(proprietarioInstance);
 	}
 
 	@Override
-	public void delete(Proprietario o) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void delete(Proprietario proprietarioInstance) throws Exception {
+		if (proprietarioInstance == null) {
+			throw new Exception("Problema valore in input");
+		}
+
+		entityManager.remove(entityManager.merge(proprietarioInstance));
 	}
 }
