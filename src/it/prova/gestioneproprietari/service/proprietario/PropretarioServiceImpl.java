@@ -1,8 +1,10 @@
 package it.prova.gestioneproprietari.service.proprietario;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneproprietari.dao.EntityManagerUtil;
 import it.prova.gestioneproprietari.dao.proprietario.ProprietarioDAO;
@@ -113,6 +115,23 @@ public class PropretarioServiceImpl implements ProprietarioService{
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public TypedQuery<Proprietario> contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception{
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+	
+		try {
+
+			proprietarioDAO.setEntityManager(entityManager);
+		
+			return proprietarioDAO.findAllProprietarisiedonoAutomobiliImmatricolateDopo(annoImmatricolazione);
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		} finally {

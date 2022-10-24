@@ -1,6 +1,7 @@
 package it.prova.gestioneproprietari.test;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import it.prova.gestioneproprietari.dao.EntityManagerUtil;
 import it.prova.gestioneproprietari.model.Automobile;
@@ -31,6 +32,12 @@ public class TestProprietarioAutomobile {
 			
 			testRimuoviProprietario(proprietarioService);
 			System.out.println("in tabella ci sono: " + proprietarioService.listAllProprietari().size() + " elementi");
+			
+			//testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(proprietarioService, automobileService);
+			
+			testCercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon(proprietarioService, automobileService);
+			
+			testCercaTutteAutomobiliErroriDiMinorenni(proprietarioService, automobileService);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -124,5 +131,87 @@ public class TestProprietarioAutomobile {
 		
 		
 		System.out.println(".......testRimuoviProprietario fine: PASSED.............");
+	}
+	
+	private static void testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(ProprietarioService proprietarioService, AutomobileService automobileService) throws Exception{
+		System.out.println(".......testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo inizio.............");
+		
+		Proprietario nuovoProprietario = new Proprietario("Luigi","Bianchi","codiceFiscaleLuigiBianchi", new SimpleDateFormat("yyyy/MM/dd").parse("1990/04/12"));
+		if(nuovoProprietario.getId() != null)
+			throw new RuntimeException("testRimuoviProprietario: FALLITO record gia presente");
+		proprietarioService.inserisciNuovo(nuovoProprietario);
+		if(nuovoProprietario.getId() == null)
+			throw new RuntimeException("testRimuoviProprietario: FALLITO inserimento non riuscito");
+		
+		Automobile nuovaAutomobile = new Automobile("BMW","E36","FF564GH",new SimpleDateFormat("yyyy/MM/dd").parse("1997/05/03"));
+		if(nuovaAutomobile.getId() != null)
+			throw new RuntimeException("testInserisciUnAutomobile: FALLITO record gia presente");
+		
+		nuovaAutomobile.setProprietario(nuovoProprietario);
+		
+		automobileService.inserisciNuovo(nuovaAutomobile);
+		if(nuovaAutomobile.getId() == null)
+			throw new RuntimeException("testInserisciUnAutomobile: FALLITO inserimento non riuscito");
+		
+		Date annoImmatricolazione = new SimpleDateFormat("yyyy/MM/dd").parse("1800/01/01");
+		
+		proprietarioService.contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(annoImmatricolazione);
+		
+		
+		System.out.println(".......testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo fine: PASSED.............");
+	}
+	
+	private static void testCercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon(ProprietarioService proprietarioService,AutomobileService automobileService) throws Exception{
+		System.out.println(".......testCercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon inizio.............");
+		
+		Automobile nuovaAutomobile = new Automobile("Fiat","punto","FF564GH",new SimpleDateFormat("yyyy/MM/dd").parse("1997/05/03"));
+		Automobile nuovaAutomobile2 = new Automobile("Fiat","panda","FF564GH",new SimpleDateFormat("yyyy/MM/dd").parse("1997/05/03"));
+		Proprietario nuovoProprietario = new Proprietario("Gigi","Marrone","gigiMarroneCF", new SimpleDateFormat("yyyy/MM/dd").parse("1980/01/01"));
+		
+		nuovaAutomobile.setProprietario(nuovoProprietario);
+		nuovaAutomobile2.setProprietario(nuovoProprietario);
+		
+		proprietarioService.inserisciNuovo(nuovoProprietario);
+		automobileService.inserisciNuovo(nuovaAutomobile);
+		automobileService.inserisciNuovo(nuovaAutomobile2);
+		
+		String iniziale = "g";
+		automobileService.cercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon(iniziale);
+		
+		automobileService.rimuovi(nuovaAutomobile.getId());
+		automobileService.rimuovi(nuovaAutomobile2.getId());
+		proprietarioService.rimuovi(nuovoProprietario.getId());
+		
+		System.out.println(".......testCercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon fine: PASSED.............");
+	}
+	
+	private static void testCercaTutteAutomobiliErroriDiMinorenni(ProprietarioService proprietarioService, AutomobileService automobileService) throws Exception{
+		System.out.println(".......testCercaTutteAutomobiliErroriDiMinorenni inizio.............");
+		
+		Automobile nuovaAutomobile = new Automobile("Fiat","punto","FF564GH",new SimpleDateFormat("yyyy/MM/dd").parse("1997/05/03"));
+		Automobile nuovaAutomobile2 = new Automobile("Fiat","panda","FF564GH",new SimpleDateFormat("yyyy/MM/dd").parse("1997/05/03"));
+		Proprietario nuovoProprietario = new Proprietario("Gigi","Marrone","gigiMarroneCF", new SimpleDateFormat("yyyy/MM/dd").parse("2010/01/01"));
+		Proprietario nuovoProprietario2 = new Proprietario("Gigi","Marrone","gigiMarroneCF", new SimpleDateFormat("yyyy/MM/dd").parse("2010/01/01"));
+		
+		nuovaAutomobile.setProprietario(nuovoProprietario);
+		nuovaAutomobile2.setProprietario(nuovoProprietario2);
+		
+		proprietarioService.inserisciNuovo(nuovoProprietario);
+		proprietarioService.inserisciNuovo(nuovoProprietario2);
+		automobileService.inserisciNuovo(nuovaAutomobile);
+		automobileService.inserisciNuovo(nuovaAutomobile2);
+		
+		for (Automobile a : automobileService.cercaTutteAutomobiliErroriDiMinorenni()) {
+			System.out.println(a);
+		}
+		
+		//automobileService.cercaTutteAutomobiliErroriDiMinorenni();
+
+		automobileService.rimuovi(nuovaAutomobile.getId());
+		automobileService.rimuovi(nuovaAutomobile2.getId());
+		proprietarioService.rimuovi(nuovoProprietario.getId());
+		proprietarioService.rimuovi(nuovoProprietario2.getId());
+		
+		System.out.println(".......testCercaTutteAutomobiliErroriDiMinorenni fine: PASSED.............");
 	}
 }

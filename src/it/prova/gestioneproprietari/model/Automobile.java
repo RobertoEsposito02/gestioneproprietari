@@ -88,4 +88,8 @@ public class Automobile {
 	public void setProprietario(Proprietario proprietario) {
 		this.proprietario = proprietario;
 	}
+	
+	public String toString() {
+		return "" + this.marca + this.modello;
+	}
 }
