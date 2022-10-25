@@ -69,7 +69,6 @@ public class AutomobileDAOImpl implements AutomobileDAO{
 
 	@Override
 	public List<Automobile> findAllAutomobiliErroriDiMinorenni() throws Exception{
-		String dataString = "2005-01-01";
 		Date date = new SimpleDateFormat("yyyy/MM/dd").parse("2005/01/01");
 		TypedQuery<Automobile> query = entityManager.createQuery("from Automobile a inner join fetch a.proprietario where datadinascita > ?1", Automobile.class);
 		return query.setParameter(1,date).getResultList();

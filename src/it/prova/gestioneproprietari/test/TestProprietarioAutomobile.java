@@ -33,7 +33,7 @@ public class TestProprietarioAutomobile {
 			testRimuoviProprietario(proprietarioService);
 			System.out.println("in tabella ci sono: " + proprietarioService.listAllProprietari().size() + " elementi");
 			
-			//testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(proprietarioService, automobileService);
+			testContaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(proprietarioService, automobileService);
 			
 			testCercaTutteAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon(proprietarioService, automobileService);
 			
@@ -200,12 +200,8 @@ public class TestProprietarioAutomobile {
 		proprietarioService.inserisciNuovo(nuovoProprietario2);
 		automobileService.inserisciNuovo(nuovaAutomobile);
 		automobileService.inserisciNuovo(nuovaAutomobile2);
-		
-		for (Automobile a : automobileService.cercaTutteAutomobiliErroriDiMinorenni()) {
-			System.out.println(a);
-		}
-		
-		//automobileService.cercaTutteAutomobiliErroriDiMinorenni();
+	
+		automobileService.cercaTutteAutomobiliErroriDiMinorenni();
 
 		automobileService.rimuovi(nuovaAutomobile.getId());
 		automobileService.rimuovi(nuovaAutomobile2.getId());

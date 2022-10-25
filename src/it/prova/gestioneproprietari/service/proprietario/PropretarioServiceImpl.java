@@ -123,7 +123,7 @@ public class PropretarioServiceImpl implements ProprietarioService{
 	}
 
 	@Override
-	public TypedQuery<Proprietario> contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception{
+	public int contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception{
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 	
 		try {

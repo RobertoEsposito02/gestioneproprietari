@@ -21,5 +21,5 @@ public interface ProprietarioService {
 
 	public void rimuovi(Long idProprietarioInstance) throws Exception;
 	
-	public TypedQuery<Proprietario> contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception;
+	public int contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception;
 }
