@@ -9,15 +9,15 @@ import javax.persistence.TypedQuery;
 
 import it.prova.gestioneproprietari.model.Automobile;
 
-public class AutomobileDAOImpl implements AutomobileDAO{
+public class AutomobileDAOImpl implements AutomobileDAO {
 
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;	
+		this.entityManager = entityManager;
 	}
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
@@ -34,11 +34,11 @@ public class AutomobileDAOImpl implements AutomobileDAO{
 
 	@Override
 	public void update(Automobile automobileInstance) throws Exception {
-		if(automobileInstance == null)
+		if (automobileInstance == null)
 			throw new Exception("input non valido");
-		
+
 		automobileInstance = entityManager.merge(automobileInstance);
-		
+
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class AutomobileDAOImpl implements AutomobileDAO{
 		}
 
 		entityManager.persist(automobileInstance);
-		
+
 	}
 
 	@Override
@@ -63,14 +63,17 @@ public class AutomobileDAOImpl implements AutomobileDAO{
 	@Override
 	public List<Automobile> findAllAutomobiliConProprietarioConCodiceFiscaleCheIniziaCon(String iniziale)
 			throws Exception {
-		TypedQuery<Automobile> query = entityManager.createQuery("select distinct a from Automobile a left join fetch a.proprietario where codicefiscale like ?1", Automobile.class);
-		return query.setParameter(1, iniziale +"%").getResultList();
+		TypedQuery<Automobile> query = entityManager.createQuery(
+				"select distinct a from Automobile a left join fetch a.proprietario where codicefiscale like ?1",
+				Automobile.class);
+		return query.setParameter(1, iniziale + "%").getResultList();
 	}
 
 	@Override
-	public List<Automobile> findAllAutomobiliErroriDiMinorenni() throws Exception{
+	public List<Automobile> findAllAutomobiliErroriDiMinorenni() throws Exception {
 		Date date = new SimpleDateFormat("yyyy/MM/dd").parse("2005/01/01");
-		TypedQuery<Automobile> query = entityManager.createQuery("from Automobile a inner join fetch a.proprietario where datadinascita > ?1", Automobile.class);
-		return query.setParameter(1,date).getResultList();
+		TypedQuery<Automobile> query = entityManager.createQuery(
+				"from Automobile a inner join fetch a.proprietario where datadinascita > ?1", Automobile.class);
+		return query.setParameter(1, date).getResultList();
 	}
 }

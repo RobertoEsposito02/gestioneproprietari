@@ -10,7 +10,7 @@ import it.prova.gestioneproprietari.model.Proprietario;
 
 public interface ProprietarioService {
 	public void setProprietarioDAO(ProprietarioDAO proprietarioDAO);
-	
+
 	public List<Proprietario> listAllProprietari() throws Exception;
 
 	public Proprietario caricaSingoloProprietario(Long id) throws Exception;
@@ -20,6 +20,6 @@ public interface ProprietarioService {
 	public void inserisciNuovo(Proprietario proprietarioInstance) throws Exception;
 
 	public void rimuovi(Long idProprietarioInstance) throws Exception;
-	
+
 	public int contaQuantiProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception;
 }

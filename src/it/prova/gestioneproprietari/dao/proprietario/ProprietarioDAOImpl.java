@@ -12,12 +12,12 @@ import javassist.expr.NewArray;
 public class ProprietarioDAOImpl implements ProprietarioDAO {
 
 	private EntityManager entityManager;
-	
+
 	@Override
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
@@ -34,9 +34,9 @@ public class ProprietarioDAOImpl implements ProprietarioDAO {
 
 	@Override
 	public void update(Proprietario proprietarioInstance) throws Exception {
-		if(proprietarioInstance == null)
+		if (proprietarioInstance == null)
 			throw new Exception("input non valido");
-		
+
 		proprietarioInstance = entityManager.merge(proprietarioInstance);
 	}
 
@@ -60,7 +60,9 @@ public class ProprietarioDAOImpl implements ProprietarioDAO {
 
 	@Override
 	public int findAllProprietarisiedonoAutomobiliImmatricolateDopo(Date annoImmatricolazione) throws Exception {
-		TypedQuery<Long> query = entityManager.createQuery("select count(distinct proprietario_id) from Automobile a where annoimmatricolazione > ?1 ", Long.class);
+		TypedQuery<Long> query = entityManager.createQuery(
+				"select count(distinct proprietario_id) from Automobile a where annoimmatricolazione > ?1 ",
+				Long.class);
 		query.setParameter(1, annoImmatricolazione);
 		return query.getSingleResult().intValue();
 	}
