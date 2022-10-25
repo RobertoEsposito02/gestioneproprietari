@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import it.prova.gestioneproprietari.dao.EntityManagerUtil;
 import it.prova.gestioneproprietari.dao.proprietario.ProprietarioDAO;

@@ -3,8 +3,6 @@ package it.prova.gestioneproprietari.service.proprietario;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TypedQuery;
-
 import it.prova.gestioneproprietari.dao.proprietario.ProprietarioDAO;
 import it.prova.gestioneproprietari.model.Proprietario;
 

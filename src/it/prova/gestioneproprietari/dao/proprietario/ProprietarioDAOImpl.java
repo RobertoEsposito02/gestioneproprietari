@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import it.prova.gestioneproprietari.model.Proprietario;
-import javassist.expr.NewArray;
 
 public class ProprietarioDAOImpl implements ProprietarioDAO {
 
